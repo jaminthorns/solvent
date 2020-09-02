@@ -1,4 +1,4 @@
-# ExHtml
+# ExHTML
 
 **TODO: Add description**
 

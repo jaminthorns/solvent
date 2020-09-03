@@ -8,9 +8,14 @@ defmodule ExHTMLTest do
   @text "test text"
 
   describe "element" do
-    test "renders with no attributes or children" do
+    test "renders with no attributes or children (no closing tag)" do
       div()
       |> renders_to("<div>")
+    end
+
+    test "renders with no attributes or children (closing tag)" do
+      div(do: nil)
+      |> renders_to("<div></div>")
     end
 
     test "renders with attributes and no children" do

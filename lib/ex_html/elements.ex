@@ -33,11 +33,14 @@ defmodule ExHTML.Elements do
 
   @doc false
   def element(tag, attrs) do
-    case Keyword.pop(attrs, :do) do
-      {nil, []} -> Tag.tag(tag)
-      {nil, attrs} -> Tag.tag(tag, attrs)
-      {children, []} -> Tag.content_tag(tag, children)
-      {children, attrs} -> Tag.content_tag(tag, children, attrs)
+    has_children? = Keyword.has_key?(attrs, :do)
+    {children, attrs} = Keyword.pop(attrs, :do)
+
+    case {has_children?, attrs} do
+      {false, []} -> Tag.tag(tag)
+      {false, attrs} -> Tag.tag(tag, attrs)
+      {true, []} -> Tag.content_tag(tag, children)
+      {true, attrs} -> Tag.content_tag(tag, children, attrs)
     end
   end
 end

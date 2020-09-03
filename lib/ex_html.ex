@@ -13,9 +13,8 @@ defmodule ExHTML do
   @doc ~S"""
   Call a function using the same syntax as an element macro.
 
-  `props` are supplied as a `Keyword` list, but they are passed to your function
-  as a `Map`. Any children given through `:do` will be added under the
-  `children` key of `props`.
+  Any children passed through the `:do` key will be added under the `:children`
+  key of `props`.
 
   ## Examples
 
@@ -34,24 +33,19 @@ defmodule ExHTML do
       "<button class=\"blue rounded\">Click Me!</button>"
   """
   defmacro component(function) do
-    call(function, quote(do: %{}))
+    call(function, quote(do: []))
   end
 
   defmacro component(function, do: expr) do
-    call(function, quote(do: %{children: unquote(children(expr))}))
+    call(function, quote(do: [children: unquote(children(expr))]))
   end
 
   defmacro component(function, props) do
-    call(function, quote(do: Map.new(unquote(props))))
+    call(function, props)
   end
 
   defmacro component(function, props, do: expr) do
-    props =
-      quote bind_quoted: [props: props, children: children(expr)] do
-        props |> Map.new() |> Map.put(:children, children)
-      end
-
-    call(function, props)
+    call(function, quote(do: Keyword.put(unquote(props), :children, unquote(children(expr)))))
   end
 
   defp call({name, meta, _}, props), do: {name, meta, [props]}

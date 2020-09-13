@@ -26,29 +26,27 @@ defmodule ExHTML do
       ...>   end
       ...> end
       ...>
-      ...> component Components.my_button, class: "rounded" do
+      ...> component &Components.my_button/1, class: "rounded" do
       ...>   "Click Me!"
       ...> end
       ...> |> render()
       "<button class=\"blue rounded\">Click Me!</button>"
   """
-  defmacro component(function) do
-    call(function, quote(do: []))
+  defmacro component(fun) do
+    quote do: unquote(fun).([])
   end
 
-  defmacro component(function, do: expr) do
-    call(function, quote(do: [children: unquote(children(expr))]))
+  defmacro component(fun, do: expr) do
+    quote do: unquote(fun).(children: unquote(children(expr)))
   end
 
-  defmacro component(function, props) do
-    call(function, props)
+  defmacro component(fun, props) do
+    quote do: unquote(fun).(unquote(props))
   end
 
-  defmacro component(function, props, do: expr) do
-    call(function, quote(do: Keyword.put(unquote(props), :children, unquote(children(expr)))))
+  defmacro component(fun, props, do: expr) do
+    quote do: unquote(fun).(Keyword.put(unquote(props), :children, unquote(children(expr))))
   end
-
-  defp call({name, meta, _}, props), do: {name, meta, [props]}
 
   @doc """
   Write a `List` of elements as a block.

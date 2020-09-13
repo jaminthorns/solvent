@@ -1,8 +1,8 @@
-defmodule ExHTMLTest do
+defmodule SolventTest do
   use ExUnit.Case
-  use ExHTML
+  use Solvent
 
-  doctest ExHTML
+  doctest Solvent
 
   @class "test-class"
   @text "test text"

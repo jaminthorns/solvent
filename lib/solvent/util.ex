@@ -1,4 +1,4 @@
-defmodule ExHTML.Util do
+defmodule Solvent.Util do
   @moduledoc false
 
   @doc false

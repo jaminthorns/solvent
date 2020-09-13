@@ -1,21 +1,18 @@
-# ExHTML
+# Solvent
 
-**TODO: Add description**
+> An Elixir library for creating HTML markup and React-like components.
+
+See the docs for more information.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ex_html` to your list of dependencies in `mix.exs`:
+This library is not yet available in Hex, but it can still be directly installed
+from GitHub:
 
 ```elixir
 def deps do
   [
-    {:ex_html, "~> 0.1.0"}
+    {:solvent, github: "jaminthorns/solvent"}
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/ex_html](https://hexdocs.pm/ex_html).
-

@@ -2,10 +2,10 @@ defmodule Solvent.Elements do
   @moduledoc """
   An "element macro" is a helper for creating an HTML element.
 
-  Their purpose is to provide a nicer API and syntax around the
-  `Phoenix.HTML.Tag.tag/1` and `Phoenix.HTML.Tag.content_tag/2` functions. An
-  element macro is generated for every tag in the HTML standard, so you should
-  be able to write all of your HTML using these macros.
+  Their purpose is to provide a nicer syntax around the `Phoenix.HTML.Tag.tag/1`
+  and `Phoenix.HTML.Tag.content_tag/2` functions. An element macro is generated
+  for every tag in the HTML standard, so you should be able to write all of your
+  HTML using these macros.
   """
 
   import Solvent.Util

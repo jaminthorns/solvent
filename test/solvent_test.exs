@@ -34,73 +34,68 @@ defmodule SolventTest do
     end
 
     test "renders with child elements and no attributes" do
-      span_html = "<span>#{@text}</span>"
+      child = "<span>#{@text}</span>"
 
       div do
         span(do: @text)
         span(do: @text)
       end
-      |> renders_to("<div>#{span_html}#{span_html}</div>")
+      |> renders_to("<div>#{child}#{child}</div>")
     end
 
     test "renders with attributes and child elements" do
-      child_tag = "<span>#{@text}</span>"
+      child = "<span>#{@text}</span>"
 
       div class: @class do
         span(do: @text)
         span(do: @text)
       end
-      |> renders_to("<div class=\"#{@class}\">#{child_tag}#{child_tag}</div>")
+      |> renders_to("<div class=\"#{@class}\">#{child}#{child}</div>")
+    end
+  end
+
+  describe "fragment" do
+    test "renders without wrapping element" do
+      child = "<span>#{@text}</span>"
+
+      fragment do
+        span(do: @text)
+        span(do: @text)
+      end
+      |> renders_to("#{child}#{child}")
+    end
+  end
+
+  describe "component" do
+    test "renders with props and no children" do
+      component(&my_button/1, toggled?: true)
+      |> renders_to("<button class=\"toggled\"></button>")
     end
 
-    test "renders with interspersed child text and elements" do
-      child_tag = "<span>#{@text}</span>"
-      children = "#{@text}#{child_tag}#{@text}#{child_tag}#{@text}"
-
-      div class: @class do
-        @text
-        span(do: @text)
-        @text
-        span(do: @text)
-        @text
-      end
-      |> renders_to("<div class=\"#{@class}\">#{children}</div>")
+    test "renders with children passed through keyword and no props" do
+      component(&my_button/1, do: @text)
+      |> renders_to("<button>#{@text}</button>")
     end
 
-    test "renders with interspersed child elements and fragments" do
-      child_tag = "<span>#{@text}</span>"
-      children = "#{child_tag}#{child_tag}#{child_tag}#{child_tag}"
-
-      div class: @class do
-        span(do: @text)
-
-        fragment do
-          span(do: @text)
-          span(do: @text)
-        end
-
-        span(do: @text)
-      end
-      |> renders_to("<div class=\"#{@class}\">#{children}</div>")
+    test "renders with props and children passed through keyword" do
+      component(&my_button/1, toggled?: true, do: @text)
+      |> renders_to("<button class=\"toggled\">#{@text}</button>")
     end
 
-    test "renders with child elements as variables" do
-      child_tag = "<span>#{@text}</span>"
-      children = "#{child_tag}#{child_tag}#{child_tag}"
-
-      element = span(do: @text)
-
-      elements =
-        fragment do
-          span(do: @text)
-          span(do: @text)
-        end
-
-      div class: @class do
-        element
-        elements
+    test "renders with props and children passed through block" do
+      component &my_button/1, toggled?: true do
+        @text
       end
-      |> renders_to("<div class=\"#{@class}\">#{children}</div>")
+      |> renders_to("<button class=\"toggled\">#{@text}</button>")
+    end
+  end
+
+  defp my_button(props) do
+    toggled? = Keyword.get(props, :toggled?, false)
+    class = if(toggled?, do: "toggled")
+
+    button class: class do
+      props[:children]
     end
   end
 

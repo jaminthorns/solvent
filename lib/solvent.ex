@@ -83,7 +83,7 @@ defmodule Solvent do
 
   ### Components
 
-  What if you want to reuse a bit of markup? You can easily do that with a
+  What if you want to reuse some of markup? You can easily do that with
   functions:
 
       def banner(title, subtitle) do
@@ -113,10 +113,10 @@ defmodule Solvent do
         end
       end
 
-  This works just fine in most cases, but for more complex reusable pieces of
-  markup, you might benefit from a similar interface as the element macros, with
-  a keyword list of named arguments and an optional `do/end` block for children.
-  That's what `component/3` is for:
+  That's all a "component" really is: a function that returns markup. This works
+  just fine in most cases, but for components that expect to be passed their own
+  children, you might benefit from a similar interface as the element macros,
+  with a `do/end` block for children. That's what `component/3` is for:
 
       def question(props) do
         details do
@@ -145,8 +145,13 @@ defmodule Solvent do
       end
 
   The function that you pass to `component/3` must be a 1-arity function that
-  receives a keyword list (`props`). If children are given with `:do`, they will
-  be available under the `:children` key.
+  receives a keyword list (`props`). Children given with `:do` will be available
+  under the `:children` key.
+
+  Since a component is just a function that returns markup, this means that you
+  can compose them in any way you'd like. The `component/3` macro can be used
+  when you want to pass multiple children through a `do/end` block, but don't
+  feel the need to use it if you don't need that functionality.
   """
 
   import Solvent.Util
@@ -165,27 +170,25 @@ defmodule Solvent do
 
   See `component/3`.
   """
-  defmacro component(fun) do
-    quote do: unquote(fun).([])
-  end
-
-  @doc """
-  Call a "component function" using the same syntax as an element macro.
-
-  See `component/3`.
-  """
   defmacro component(fun, do: expr) do
-    quote do: unquote(fun).(children: unquote(children(expr)))
+    quote bind_quoted: [fun: fun, children: children(expr)] do
+      fun.(children: children)
+    end
   end
 
   defmacro component(fun, props) do
-    quote do: unquote(fun).(unquote(props))
+    quote bind_quoted: [fun: fun, props: props] do
+      case Keyword.pop(props, :do) do
+        {nil, props} -> fun.(props)
+        {children, props} -> fun.(Keyword.put(props, :children, children))
+      end
+    end
   end
 
   @doc ~S"""
   Call a "component function" using the same syntax as an element macro.
 
-  Any children passed under the `:do` key will be availabled under the
+  Any children passed under the `:do` key will be available under the
   `:children` key of `props`.
 
   ## Examples
@@ -209,14 +212,16 @@ defmodule Solvent do
   defmacro component(fun, props, children)
 
   defmacro component(fun, props, do: expr) do
-    quote do: unquote(fun).(Keyword.put(unquote(props), :children, unquote(children(expr))))
+    quote bind_quoted: [fun: fun, props: props, children: children(expr)] do
+      fun.(Keyword.put(props, :children, children))
+    end
   end
 
   @doc """
   Write multiple elements in a block.
 
-  This macro gives you the functionality of writing children in `do/end` block
-  like `component/3` or an element macro, but without a wrapping element.
+  This macro gives you the functionality of writing children in a `do/end` block
+  like an element macro, but without a wrapping element.
 
   ## Examples
 
@@ -237,8 +242,8 @@ defmodule Solvent do
   end
 
   @doc ~S"""
-  Convert the result of `component/3`, `fragment/1`, or an element macro to an
-  HTML string.
+  Convert markup returned by `component/3`, `fragment/1`, or an element macro to
+  an HTML string.
 
   ## Examples
 

@@ -1,6 +1,7 @@
 # Solvent
 
-> An Elixir library for creating HTML markup and React-like components.
+> An Elixir library for creating HTML markup and
+> [React](https://reactjs.org/)-like components.
 
 See the docs for more information.
 

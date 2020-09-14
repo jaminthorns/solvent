@@ -53,7 +53,7 @@ defmodule Solvent do
         p do
           \"\"\"
           I travelled the world this past summer. The landmarks, landscapes, and
-          people were all amazing. I cannot recommand it enough.
+          people were all amazing. I cannot recommend it enough.
           \"\"\"
         end
       end

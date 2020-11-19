@@ -77,7 +77,11 @@ defmodule Solvent do
 
       section do
         h1(do: "Your Trinkets")
-        if(length(trinkets) > 10, do: aside(do: "That's a lot of trinkets!"))
+
+        if length(trinkets) > 10 do
+          aside(do: "That's a lot of trinkets!")
+        end
+
         ul(do: Enum.map(trinkets, fn trinket -> li(do: trinket.description) end))
       end
 
@@ -101,14 +105,31 @@ defmodule Solvent do
 
       # ...
 
+      items = [
+        %{label: "Flat-Screen TV", category: :electronics},
+        %{label: "GameStation Pro", category: :electronics},
+        %{label: "Light Bulb", category: :home_improvement},
+        %{label: "Luxurious Loveseat", category: :home_goods},
+        %{label: "Modern Bed Frame", category: :home_goods},
+        %{label: "Push Lawnmower", category: :home_improvement},
+        %{label: "Sectional Sofa", category: :home_goods},
+        %{label: "Step Ladder", category: :home_improvement},
+        %{label: "Surround Sound Speaker System", category: :electronics},
+      ]
+
       main do
         section do
-          banner("Electronics", "TVs, Home Audio, Videogames")
+          banner("Home Goods", "Furniture, Storage, Outdoor Tools")
           ul(do: items_by_category(items, :home_goods))
         end
 
         section do
-          banner("Home Goods", "Furniture, Storage, Outdoor Tools")
+          banner("Home Improvement", "Tools, Fixtures, Hardware")
+          ul(do: items_by_category(items, :home_improvement))
+        end
+
+        section do
+          banner("Electronics", "TVs, Home Audio, Videogames")
           ul(do: items_by_category(items, :electronics))
         end
       end

@@ -90,6 +90,13 @@ defmodule SolventTest do
     end
   end
 
+  describe "sigil_j" do
+    test "renders JavaScript within a <script> tag" do
+      ~j"console.log('test')"
+      |> renders_to("<script>console.log('test')</script>")
+    end
+  end
+
   defp my_button(props) do
     toggled? = Keyword.get(props, :toggled?, false)
     class = if(toggled?, do: "toggled")

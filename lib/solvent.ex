@@ -177,6 +177,7 @@ defmodule Solvent do
 
   import Solvent.Util
   alias Phoenix.HTML
+  alias Phoenix.HTML.Tag
 
   defmacro __using__(_) do
     quote do
@@ -261,6 +262,17 @@ defmodule Solvent do
       HTML.html_escape(children)
     end
   end
+
+  @doc """
+  A sigil for writing JavaScript within a `<script>` tag.
+
+  ## Examples
+
+      iex> ~j"console.log('Hello World!')" |> render()
+      "<script>console.log('Hello World!')</script>"
+  """
+  def sigil_j(javascript, modifiers)
+  def sigil_j(javascript, []), do: Tag.content_tag(:script, HTML.raw(javascript))
 
   @doc ~S"""
   Convert markup returned by `component/3`, `fragment/1`, or an element macro to

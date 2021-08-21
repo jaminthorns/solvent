@@ -21,8 +21,8 @@ defmodule Solvent.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.22", only: :dev, runtime: false},
-      {:phoenix_html, "~> 2.14"}
+      {:ex_doc, "~> 0.25", only: :dev, runtime: false},
+      {:phoenix_html, "~> 3.0"}
     ]
   end
 end
